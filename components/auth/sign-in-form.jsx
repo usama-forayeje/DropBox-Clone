@@ -15,7 +15,6 @@ import Link from "next/link"
 import { AlertCircle, Loader2, Cloud, Sparkles, Eye, EyeOff } from "lucide-react"
 import { toast } from "sonner"
 
-
 export default function SignInForm() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -32,7 +31,7 @@ export default function SignInForm() {
   })
 
   const onSubmit = async (data) => {
-    if (!isLoaded) return
+    if (!isLoaded || !signIn || !setActive) return
 
     setIsSubmitting(true)
     setAuthError(null)
@@ -54,7 +53,10 @@ export default function SignInForm() {
         setAuthError("Sign in failed. Please check your credentials.")
       }
     } catch (error) {
-      setAuthError(error.errors[0]?.longMessage || "Sign in failed")
+      // Safely access error messages
+      setAuthError(
+        error?.errors?.[0]?.longMessage || error?.message || "Sign in failed"
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -70,7 +72,9 @@ export default function SignInForm() {
           </div>
         </div>
         <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-        <CardDescription className="text-base">Sign in to access your secure cloud storage</CardDescription>
+        <CardDescription className="text-base">
+          Sign in to access your secure cloud storage
+        </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
@@ -94,7 +98,9 @@ export default function SignInForm() {
               {...register("identifier")}
               className={errors.identifier ? "border-red-300" : ""}
             />
-            {errors.identifier && <p className="text-sm text-red-600">{errors.identifier.message}</p>}
+            {errors.identifier && (
+              <p className="text-sm text-red-600">{errors.identifier.message}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -102,7 +108,10 @@ export default function SignInForm() {
               <Label htmlFor="password" className="text-sm font-medium">
                 Password
               </Label>
-              <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 hover:underline">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -121,6 +130,8 @@ export default function SignInForm() {
                 size="sm"
                 className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4 text-gray-400" />
@@ -129,13 +140,15 @@ export default function SignInForm() {
                 )}
               </Button>
             </div>
-            {errors.password && <p className="text-sm text-red-600">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-sm text-red-600">{errors.password.message}</p>
+            )}
           </div>
 
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+            className="w-full bg-gradient-to-r cursor-pointer from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
             size="lg"
           >
             {isSubmitting ? (
@@ -155,7 +168,10 @@ export default function SignInForm() {
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link href="/sign-up" className="font-medium text-blue-600 hover:text-blue-700 hover:underline">
+              <Link
+                href="/sign-up"
+                className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+              >
                 Sign up for free
               </Link>
             </p>

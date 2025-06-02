@@ -9,8 +9,8 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Upload, ImageIcon, Video, Music, X, Check, AlertCircle } from "lucide-react"
 import { formatBytes } from "@/lib/utils"
-import { toast } from "@/hooks/use-toast"
 import { useAuth } from "@clerk/nextjs"
+import { toast } from "sonner"
 
 
 export default function UploadDialog({ open, onOpenChange, parentId }) {

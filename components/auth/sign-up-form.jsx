@@ -125,7 +125,7 @@ export default function SignUpForm() {
                 id="verificationCode"
                 type="text"
                 placeholder="Enter 6-digit code"
-                value={verificationCode}
+                value={verificationCode ?? ""}
                 onChange={(e) => setVerificationCode(e.target.value)}
                 className="text-center text-lg tracking-widest"
                 maxLength={6}

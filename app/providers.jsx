@@ -1,7 +1,6 @@
 "use client"
 
 import { ImageKitProvider } from "imagekitio-next"
-import { Toaster } from "@/components/ui/sonner"
 // import { ThemeProvider } from "@/components/theme-provider"
 
 export const authenticator = async () => {
@@ -23,9 +22,7 @@ export function Providers({ children }) {
             publicKey={process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || ""}
             urlEndpoint={process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || ""}
         >
-            <Toaster>
-                {children}
-            </Toaster>
+            {children}
 
         </ImageKitProvider>
         // </ThemeProvider>

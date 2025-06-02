@@ -1,13 +1,19 @@
-import { auth } from "@clerk/nextjs/server"
-import { redirect } from "next/navigation"
-import SignInForm from "@/components/auth/sign-in-form"
+"use client";
 
-export default async function SignInPage() {
-  const { userId } = await auth()
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import SignInForm from "@/components/auth/sign-in-form";
+import { useEffect } from "react";
 
-  if (userId) {
-    redirect("/dashboard")
-  }
+export default function SignInPage() {
+  const { userId } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userId) {
+      router.push("/dashboard");
+    }
+  }, [userId, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
@@ -15,5 +21,5 @@ export default async function SignInPage() {
         <SignInForm />
       </div>
     </div>
-  )
+  );
 }

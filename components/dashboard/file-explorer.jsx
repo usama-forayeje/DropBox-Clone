@@ -11,21 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+
 import { Folder, File, ImageIcon, FileText, Video, Music, Archive, MoreVertical, Star, Trash2, Download, Share, Edit, Eye, Grid3X3, List, ArrowLeft } from 'lucide-react'
 import { formatBytes, formatDate } from "@/lib/utils"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { toast } from "@/hooks/use-toast"
+import { toast } from "sonner"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog"
 
 
 
@@ -34,7 +26,7 @@ import { toast } from "@/hooks/use-toast"
 export default function FileExplorer({ userId, parentId }) {
   const [files, setFiles] = useState([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [viewMode, setViewMode] = useState('grid')
   const [selectedFiles, setSelectedFiles] = useState([])
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [fileToDelete, setFileToDelete] = useState(null)
@@ -56,6 +48,7 @@ export default function FileExplorer({ userId, parentId }) {
       if (!response.ok) throw new Error('Failed to fetch files')
       
       const data = await response.json()
+      console.log(data) 
       setFiles(data)
     } catch (error) {
       toast({
@@ -159,7 +152,7 @@ export default function FileExplorer({ userId, parentId }) {
       <div className="space-y-4">
         <div className="h-8 bg-gray-200 rounded animate-pulse" />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array?.from({ length: 8 }).map((_, i) => (
             <Card key={i} className="p-4">
               <div className="space-y-3">
                 <div className="h-32 bg-gray-200 rounded animate-pulse" />
