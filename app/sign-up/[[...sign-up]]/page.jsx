@@ -1,9 +1,19 @@
-import SignUpForm from "@/components/SignUpForm"
+import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import SignUpForm from "@/components/auth/sign-up-form"
 
-function SignUpPage() {
+export default async function SignUpPage() {
+  const { userId } = await auth()
+
+  if (userId) {
+    redirect("/dashboard")
+  }
+
   return (
-    <SignUpForm />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <SignUpForm />
+      </div>
+    </div>
   )
 }
-
-export default SignUpPage

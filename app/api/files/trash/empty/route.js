@@ -18,6 +18,13 @@ export async function DELETE(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const body = await request.json()
+    const { userId: bodyUserId } = body
+
+    if (bodyUserId !== userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
     // Get all trashed files for the user
     const trashedFiles = await db
       .select()
@@ -25,20 +32,18 @@ export async function DELETE(request) {
       .where(and(eq(files.userId, userId), eq(files.isTrashed, true)))
 
     // Delete files from ImageKit
-    const deletionPromises = trashedFiles.map(async (file) => {
+    for (const file of trashedFiles) {
       if (!file.isFolder && file.fileUrl) {
         try {
           const urlParts = file.fileUrl.split("/")
-          const fileName = urlParts[urlParts.length - 1]
-          const imagekitFileId = fileName.split(".")[0]
+          const imagekitFileId = urlParts[urlParts.length - 1].split(".")[0]
           await imagekit.deleteFile(imagekitFileId)
         } catch (imagekitError) {
           console.error(`Error deleting file ${file.id} from ImageKit:`, imagekitError)
+          // Continue with other files
         }
       }
-    })
-
-    await Promise.allSettled(deletionPromises)
+    }
 
     // Delete all trashed files from database
     await db.delete(files).where(and(eq(files.userId, userId), eq(files.isTrashed, true)))
