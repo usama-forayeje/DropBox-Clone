@@ -28,8 +28,9 @@ import {
     Trash2,
 } from "lucide-react"
 import { formatBytes, formatDate } from "@/lib/utils"
-import { toast } from "@/hooks/use-toast"
+
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 
 export default function StarredView({ userId }) {

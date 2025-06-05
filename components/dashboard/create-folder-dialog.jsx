@@ -1,64 +1,78 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@clerk/nextjs"
 import { Folder } from "lucide-react"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
-import { toast } from "sonner"
+import toast from "react-hot-toast"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 
 
-export default function CreateFolderDialog({ open, onOpenChange, parentId }) {
+
+export default function CreateFolderDialog({
+    open,
+    onOpenChange,
+    parentId
+}) {
     const [folderName, setFolderName] = useState("")
     const [isCreating, setIsCreating] = useState(false)
+    const router = useRouter()
     const { userId } = useAuth()
 
     const handleCreateFolder = async () => {
-        if (!folderName.trim() || !userId) return
+        if (!folderName.trim()) {
+            // toast.error("Folder name cannot be empty")
+            return
+        }
 
         setIsCreating(true)
+
         try {
-            const response = await fetch("/api/folders", {
+            const response = await fetch("/api/folders/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     name: folderName.trim(),
-                    userId,
-                    parentId: parentId || null,
+                    parentId: parentId || null
                 }),
+                credentials: "include"
             })
+
+            const data = await response.json()
 
             if (!response.ok) {
-                throw new Error("Failed to create folder")
+                throw new Error(data.error || "Failed to create folder")
             }
 
-            toast({
-                title: "Folder created",
-                description: `"${folderName}" has been created successfully`,
-            })
-
+            toast.success(`Folder "${folderName.trim()}" created successfully`)
             setFolderName("")
             onOpenChange(false)
 
-            // Refresh the page to show the new folder
-            window.location.reload()
+            // Refresh the page without full reload
+            router.refresh()
+
         } catch (error) {
-            toast({
-                title: "Error",
-                description: "Failed to create folder",
-                variant: "destructive",
-            })
+            console.error("Folder creation error:", error)
+            // toast.error(error.message || "Failed to create folder")
         } finally {
             setIsCreating(false)
         }
     }
 
-    const handleKeyPress = (e) => {
+    const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             handleCreateFolder()
         }
@@ -68,32 +82,42 @@ export default function CreateFolderDialog({ open, onOpenChange, parentId }) {
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center space-x-2">
+                    <DialogTitle className="flex items-center gap-2">
                         <Folder className="h-5 w-5 text-blue-600" />
                         <span>Create New Folder</span>
                     </DialogTitle>
-                    <DialogDescription>Enter a name for your new folder</DialogDescription>
+                    <DialogDescription>
+                        Enter a name for your new folder
+                    </DialogDescription>
                 </DialogHeader>
 
-                <div className="space-y-4 py-4">
+                <div className="py-4 space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="folder-name">Folder Name</Label>
                         <Input
                             id="folder-name"
-                            placeholder="Enter folder name..."
+                            placeholder="My Awesome Folder"
                             value={folderName}
                             onChange={(e) => setFolderName(e.target.value)}
-                            onKeyPress={handleKeyPress}
+                            onKeyDown={handleKeyDown}
                             autoFocus
+                            disabled={isCreating}
                         />
                     </div>
                 </div>
 
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isCreating}>
+                    <Button
+                        variant="outline"
+                        onClick={() => onOpenChange(false)}
+                        disabled={isCreating}
+                    >
                         Cancel
                     </Button>
-                    <Button onClick={handleCreateFolder} disabled={!folderName.trim() || isCreating}>
+                    <Button
+                        onClick={handleCreateFolder}
+                        disabled={!folderName.trim() || isCreating}
+                    >
                         {isCreating ? "Creating..." : "Create Folder"}
                     </Button>
                 </DialogFooter>

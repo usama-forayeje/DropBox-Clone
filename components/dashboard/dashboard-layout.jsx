@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { UserButton } from "@clerk/nextjs"
-import { Cloud, Search, Plus, Home, Star, Trash2, Settings, HelpCircle, Menu, X } from 'lucide-react'
+import { Cloud, Search, Plus, Home, Star, Trash2, Settings, HelpCircle, Menu, X, File, Folder, HardDrive } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -18,127 +18,154 @@ const navigation = [
   { name: "Trash", href: "/dashboard/trash", icon: Trash2 },
 ]
 
+const stats = [
+  { name: "Total Files", value: "1,248", change: "+12% from last month", icon: File },
+  { name: "Folders", value: "48", description: "Organized collections", icon: Folder },
+  { name: "Starred", value: "32", description: "Quick access files", icon: Star },
+  { name: "In Trash", value: "15", description: "Can be restored", icon: Trash2 },
+]
+
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [uploadOpen, setUploadOpen] = useState(false)
   const [createFolderOpen, setCreateFolderOpen] = useState(false)
   const pathname = usePathname()
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+  const handleNavClick = () => {
+    if (window.innerWidth < 1024) {
+      setSidebarOpen(false)
+    }
+  }
 
-      {/* Sidebar */}
-      <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return (
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      {/* Premium Sidebar */}
+      <aside className={cn(
+        "fixed z-40 inset-y-0 left-0 w-72 bg-white border-r transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col",
+        sidebarOpen ? "translate-x-0 shadow-xl" : "-translate-x-full",
       )}>
-        <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-16 items-center justify-between px-6 border-b">
-            <div className="flex items-center space-x-2">
-              <Cloud className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">CloudBox</span>
-            </div>
+        <div className="flex items-center justify-between h-16 px-6 border-b">
+          <div className="flex items-center space-x-3">
+            <Cloud className="h-7 w-7 text-blue-600" />
+            <span className="text-xl font-semibold text-gray-900">CloudBox</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto py-4">
+          <div className="px-4 space-y-3">
             <Button
-              variant="ghost"
-              size="sm"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(false)}
+              onClick={() => {
+                setUploadOpen(true)
+                handleNavClick()
+              }}
+              className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white"
             >
-              <X className="h-5 w-5" />
+              <Plus className="mr-3 h-4 w-4" />
+              Upload Files
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreateFolderOpen(true)
+                handleNavClick()
+              }}
+              className="w-full justify-start"
+            >
+              <Plus className="mr-3 h-4 w-4" />
+              New Folder
             </Button>
           </div>
 
-          {/* Upload button */}
-          <div className="p-4">
-            <div className="space-y-2">
-              <Button 
-                onClick={() => setUploadOpen(true)}
-                className="w-full justify-start bg-blue-600 hover:bg-blue-700"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Upload Files
-              </Button>
-              <Button 
-                variant="outline"
-                onClick={() => setCreateFolderOpen(true)}
-                className="w-full justify-start"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                New Folder
-              </Button>
-            </div>
-          </div>
+          <Separator className="my-4" />
 
-          <Separator />
-
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-4 py-4">
+          <nav className="space-y-1 px-4">
             {navigation.map((item) => {
               const isActive = pathname === item.href
               return (
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={handleNavClick}
                   className={cn(
-                    "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    "flex items-center rounded-lg px-4 py-2.5 text-sm font-medium transition-colors",
                     isActive
                       ? "bg-blue-50 text-blue-700"
                       : "text-gray-700 hover:bg-gray-100"
                   )}
                 >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
+                  <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
+                  <span>{item.name}</span>
                 </Link>
               )
             })}
           </nav>
 
-          <Separator />
+          <Separator className="my-4" />
 
-          {/* Bottom navigation */}
-          <div className="space-y-1 px-4 py-4">
+          <div className="space-y-1 px-4">
             <Link
               href="/dashboard/settings"
-              className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              onClick={handleNavClick}
+              className="flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              <Settings className="mr-3 h-5 w-5" />
-              Settings
+              <Settings className="mr-3 h-5 w-5 flex-shrink-0" />
+              <span>Settings</span>
             </Link>
             <Link
               href="/help"
-              className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              onClick={handleNavClick}
+              className="flex items-center rounded-lg px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
             >
-              <HelpCircle className="mr-3 h-5 w-5" />
-              Help
+              <HelpCircle className="mr-3 h-5 w-5 flex-shrink-0" />
+              <span>Help</span>
             </Link>
           </div>
         </div>
-      </div>
+      </aside>
 
-      {/* Main content */}
-      <div className="lg:pl-64">
-        {/* Top bar */}
-        <div className="sticky top-0 z-30 bg-white border-b px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+      {/* Overlay for mobile sidebar */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Premium Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Premium Top Bar */}
+        <header className="sticky top-0 z-20 bg-white border-b">
+          <div className="flex items-center justify-between px-6 py-3">
+            <div className="flex items-center space-x-6">
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 className="lg:hidden"
                 onClick={() => setSidebarOpen(true)}
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              
-              <div className="relative w-96 max-w-lg">
+
+              <div className="relative w-80">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
                   placeholder="Search files and folders..."
@@ -147,25 +174,29 @@ export default function DashboardLayout({ children }) {
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <UserButton 
-                appearance={{
-                  elements: {
-                    avatarBox: "h-8 w-8"
-                  }
-                }}
-              />
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "h-9 w-9",
+                  rootBox: "h-10 w-10"
+                }
+              }}
+            />
+          </div>
+        </header>
+
+        {/* Premium Dashboard Content */}
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
+            {/* File Browser */}
+            <div className="lg:col-span-2 bg-white rounded-xl border shadow-sm overflow-hidden">
+              {children}
             </div>
           </div>
-        </div>
-
-        {/* Page content */}
-        <main className="p-6">
-          {children}
         </main>
       </div>
 
-      {/* Dialogs */}
+      {/* Premium Dialogs */}
       <UploadDialog open={uploadOpen} onOpenChange={setUploadOpen} />
       <CreateFolderDialog open={createFolderOpen} onOpenChange={setCreateFolderOpen} />
     </div>

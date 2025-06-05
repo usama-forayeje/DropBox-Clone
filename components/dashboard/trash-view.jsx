@@ -35,7 +35,8 @@ import {
     AlertTriangle,
 } from "lucide-react"
 import { formatBytes, formatDate } from "@/lib/utils"
-import { toast } from "@/hooks/use-toast"
+import toast from "react-hot-toast"
+
 
 
 export default function TrashView({ userId }) {

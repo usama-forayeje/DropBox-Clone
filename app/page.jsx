@@ -1,23 +1,22 @@
 import { auth } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import {
   Cloud,
-  Shield,
-  Zap,
-  Users,
-  CheckCircle,
+  Sparkles,
   ArrowRight,
   Upload,
   FolderOpen,
   Share2,
-  Sparkles,
+  Shield,
+  Zap,
+  Users,
   Globe,
-  Lock,
   Smartphone,
+  Lock,
 } from "lucide-react"
 
 export default async function HomePage() {
@@ -28,9 +27,9 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50 dark:bg-gray-900/80 dark:border-gray-700">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -41,13 +40,16 @@ export default async function HomePage() {
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 CloudBox
               </span>
-              <Badge variant="secondary" className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700">
+              <Badge
+                variant="secondary"
+                className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-700 dark:from-blue-900 dark:to-indigo-900 dark:text-blue-300"
+              >
                 Premium
               </Badge>
             </div>
             <div className="flex items-center space-x-4">
               <Link href="/sign-in">
-                <Button variant="ghost" className="hover:bg-blue-50">
+                <Button variant="ghost" className="hover:bg-blue-50 dark:hover:bg-blue-900/20">
                   Sign In
                 </Button>
               </Link>
@@ -64,19 +66,21 @@ export default async function HomePage() {
       {/* Hero Section */}
       <section className="py-24 px-4">
         <div className="container mx-auto text-center">
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full px-4 py-2 mb-6">
+          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-full px-4 py-2 mb-6">
             <Sparkles className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-700">🚀 Now with AI-powered organization</span>
+            <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+              🚀 Now with AI-powered organization
+            </span>
           </div>
 
-          <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
             Your files,
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent block">
               everywhere you need them
             </span>
           </h1>
 
-          <p className="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
             Experience the future of cloud storage with our premium platform. Store, sync, and share your files with
             enterprise-grade security and lightning-fast performance.
           </p>
@@ -91,7 +95,11 @@ export default async function HomePage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="text-lg px-10 py-4 border-2 hover:bg-blue-50">
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-lg px-10 py-4 border-2 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
               Watch Demo
             </Button>
           </div>
@@ -100,39 +108,41 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">10M+</div>
-              <div className="text-sm text-gray-600">Active Users</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Active Users</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-indigo-600">99.9%</div>
-              <div className="text-sm text-gray-600">Uptime</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Uptime</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">500PB</div>
-              <div className="text-sm text-gray-600">Data Stored</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Data Stored</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-pink-600">150+</div>
-              <div className="text-sm text-gray-600">Countries</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Countries</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-24 px-4 bg-white">
+      <section className="py-24 px-4 bg-white dark:bg-gray-800">
         <div className="container mx-auto">
           <div className="text-center mb-20">
             <Badge variant="secondary" className="mb-4">
               Features
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Everything you need in the cloud</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+              Everything you need in the cloud
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               Powerful features designed for modern teams and individuals who demand the best
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-blue-50 to-indigo-50">
+            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
               <CardHeader className="pb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mb-4">
                   <Upload className="h-7 w-7 text-white" />
@@ -144,7 +154,7 @@ export default async function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-green-50 to-emerald-50">
+            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20">
               <CardHeader className="pb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mb-4">
                   <FolderOpen className="h-7 w-7 text-white" />
@@ -156,7 +166,7 @@ export default async function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-purple-50 to-pink-50">
+            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
               <CardHeader className="pb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4">
                   <Share2 className="h-7 w-7 text-white" />
@@ -168,7 +178,7 @@ export default async function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-red-50 to-orange-50">
+            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20">
               <CardHeader className="pb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center mb-4">
                   <Shield className="h-7 w-7 text-white" />
@@ -180,7 +190,7 @@ export default async function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-yellow-50 to-amber-50">
+            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20">
               <CardHeader className="pb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-yellow-500 to-amber-500 rounded-xl flex items-center justify-center mb-4">
                   <Zap className="h-7 w-7 text-white" />
@@ -192,7 +202,7 @@ export default async function HomePage() {
               </CardHeader>
             </Card>
 
-            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-indigo-50 to-blue-50">
+            <Card className="border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20">
               <CardHeader className="pb-4">
                 <div className="w-14 h-14 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center mb-4">
                   <Users className="h-7 w-7 text-white" />
@@ -202,139 +212,6 @@ export default async function HomePage() {
                   Real-time collaboration, version control, and team workspaces with admin controls.
                 </CardDescription>
               </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section className="py-24 px-4 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="container mx-auto">
-          <div className="text-center mb-20">
-            <Badge variant="secondary" className="mb-4">
-              Pricing
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Choose your perfect plan</h2>
-            <p className="text-xl text-gray-600">Transparent pricing with no hidden fees</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Free Plan */}
-            <Card className="border-2 border-gray-200 hover:border-blue-300 transition-all duration-300">
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-2xl mb-2">Starter</CardTitle>
-                <div className="text-5xl font-bold text-gray-900 mb-2">$0</div>
-                <CardDescription className="text-base">Perfect for personal use</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>100GB premium storage</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>File sharing & sync</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Mobile & desktop apps</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Basic support</span>
-                  </div>
-                </div>
-                <Link href="/sign-up" className="block">
-                  <Button className="w-full" variant="outline" size="lg">
-                    Get Started Free
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* Pro Plan */}
-            <Card className="border-2 border-blue-500 relative shadow-2xl scale-105">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-1">
-                  Most Popular
-                </Badge>
-              </div>
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-2xl mb-2">Professional</CardTitle>
-                <div className="text-5xl font-bold text-gray-900 mb-2">$12</div>
-                <CardDescription className="text-base">For professionals and creators</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>2TB premium storage</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Advanced sharing controls</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Priority support</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Version history (30 days)</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>AI-powered search</span>
-                  </div>
-                </div>
-                <Link href="/sign-up" className="block">
-                  <Button
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                    size="lg"
-                  >
-                    Start 14-Day Trial
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
-            {/* Business Plan */}
-            <Card className="border-2 border-gray-200 hover:border-purple-300 transition-all duration-300">
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-2xl mb-2">Enterprise</CardTitle>
-                <div className="text-5xl font-bold text-gray-900 mb-2">$35</div>
-                <CardDescription className="text-base">For teams and organizations</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Unlimited storage</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Advanced team management</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>24/7 premium support</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Advanced security controls</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span>Custom integrations</span>
-                  </div>
-                </div>
-                <Link href="/sign-up" className="block">
-                  <Button className="w-full" variant="outline" size="lg">
-                    Contact Sales
-                  </Button>
-                </Link>
-              </CardContent>
             </Card>
           </div>
         </div>

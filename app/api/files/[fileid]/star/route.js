@@ -1,29 +1,29 @@
-import { db } from "@/lib/db"
-import { files } from "@/lib/db/schema"
-import { auth } from "@clerk/nextjs/server"
-import { and, eq } from "drizzle-orm"
-import { NextResponse } from "next/server"
+import { db } from "@/lib/db";
+import { files } from "@/lib/db/schema";
+import { auth } from "@clerk/nextjs/server";
+import { and, eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 export async function PATCH(request, { params }) {
   try {
-    const { userId } = await auth()
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { fileId } = params
+    const { fileId } = params;
     if (!fileId) {
-      return NextResponse.json({ error: "File ID required" }, { status: 400 })
+      return NextResponse.json({ error: "File ID required" }, { status: 400 });
     }
 
     // Check if file exists and belongs to user
     const [file] = await db
       .select()
       .from(files)
-      .where(and(eq(files.id, fileId), eq(files.userId, userId)))
+      .where(and(eq(files.id, fileId), eq(files.userId, userId)));
 
     if (!file) {
-      return NextResponse.json({ error: "File not found" }, { status: 404 })
+      return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 
     // Toggle star status
@@ -34,11 +34,14 @@ export async function PATCH(request, { params }) {
         updatedAt: new Date(),
       })
       .where(and(eq(files.id, fileId), eq(files.userId, userId)))
-      .returning()
+      .returning();
 
-    return NextResponse.json(updatedFile)
+    return NextResponse.json(updatedFile);
   } catch (error) {
-    console.error("Error updating star status:", error)
-    return NextResponse.json({ error: "Failed to update file" }, { status: 500 })
+    console.error("Error updating star status:", error);
+    return NextResponse.json(
+      { error: "Failed to update file" },
+      { status: 500 }
+    );
   }
 }
