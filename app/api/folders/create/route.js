@@ -1,35 +1,35 @@
-import { db } from "@/lib/db";
-import { files } from "@/lib/db/schema";
-import { auth } from "@clerk/nextjs/server";
-import { eq, and } from "drizzle-orm";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import { getAuth } from "@clerk/nextjs/server"
+import { db } from "@/lib/db"
+import { files } from "@/lib/db/schema"
+import { eq, and } from "drizzle-orm"
+import { NextResponse } from "next/server"
+import { z } from "zod"
 
 const CreateFolderSchema = z.object({
   name: z.string().min(1).max(255),
   parentId: z.string().nullable().optional(),
-});
+})
 
 export async function POST(req) {
   try {
-    const { userId } = await auth();
+    const { userId } = getAuth(req)
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const body = await req.json();
-    const validation = CreateFolderSchema.safeParse(body);
+    const body = await req.json()
+    const validation = CreateFolderSchema.safeParse(body)
 
     if (!validation.success) {
       return NextResponse.json(
         { error: "Invalid input data", details: validation.error.errors },
         { status: 400 }
-      );
+      )
     }
 
-    const { name, parentId } = validation.data;
+    const { name, parentId } = validation.data
 
-    // Parent folder validation (if parentId exists)
+    // Validate parent folder if provided
     if (parentId) {
       const [parentFolder] = await db
         .select()
@@ -41,17 +41,17 @@ export async function POST(req) {
             eq(files.isFolder, true),
             eq(files.isTrashed, false)
           )
-        );
+        )
 
       if (!parentFolder) {
         return NextResponse.json(
-          { error: "Parent folder not found or you don't have permission" },
+          { error: "Parent folder not found or no permission" },
           { status: 404 }
-        );
+        )
       }
     }
 
-    // Check for duplicate folder names
+    // Check for duplicate
     const [existingFolder] = await db
       .select()
       .from(files)
@@ -63,16 +63,16 @@ export async function POST(req) {
           eq(files.isTrashed, false),
           parentId ? eq(files.parentId, parentId) : eq(files.parentId, null)
         )
-      );
+      )
 
     if (existingFolder) {
       return NextResponse.json(
-        { error: "A folder with this name already exists in this location" },
+        { error: "A folder with this name already exists here" },
         { status: 409 }
-      );
+      )
     }
 
-    // Create folder
+    // Insert
     const [newFolder] = await db
       .insert(files)
       .values({
@@ -87,18 +87,18 @@ export async function POST(req) {
         isTrashed: false,
         isStarred: false,
       })
-      .returning();
+      .returning()
 
     return NextResponse.json({
       success: true,
       folder: newFolder,
       message: "Folder created successfully",
-    });
+    })
   } catch (error) {
-    console.error("[FOLDER_CREATION_ERROR]", error);
+    console.error("[FOLDER_CREATION_ERROR]", error)
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
-    );
+    )
   }
 }

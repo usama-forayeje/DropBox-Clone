@@ -10,23 +10,20 @@ const imagekit = new ImageKit({
 
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const { userId } = auth();
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const authenticationParameters = imagekit.getAuthenticationParameters();
-
     return NextResponse.json({
       ...authenticationParameters,
       userId,
     });
   } catch (error) {
-    console.error("Error generating ImageKit auth:", error);
+    console.error("ImageKit Auth Error:", error);
     return NextResponse.json(
-      {
-        error: error.message || "Failed to generate authentication parameters",
-      },
+      { error: error.message || "Server error" },
       { status: 500 }
     );
   }
