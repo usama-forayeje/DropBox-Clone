@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
-import { Toaster } from "sonner" // react-hot-toast এর পরিবর্তে sonner ব্যবহার করুন
+import { Toaster } from "sonner" 
 import { ThemeProvider } from "@/components/theme/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] })

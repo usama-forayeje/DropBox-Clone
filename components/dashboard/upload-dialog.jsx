@@ -44,7 +44,7 @@ export default function UploadDialog({ open, onOpenChange, parentId }) {
       "application/msword": [".doc"],
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
     },
-    maxSize: 100 * 1024 * 1024, // 100MB
+    maxSize: 100 * 1024 * 1024, 
   });
 
   const removeFile = (id) => {

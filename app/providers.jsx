@@ -1,4 +1,3 @@
-// app/providers.js
 "use client"
 
 import { ClerkProvider, ClerkLoading, ClerkLoaded } from "@clerk/nextjs"
